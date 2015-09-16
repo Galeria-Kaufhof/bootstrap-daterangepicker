@@ -64,6 +64,8 @@
         if (this.element.hasClass('dropup'))
             this.drops = 'up';
 
+        this.intelligentOpen = true;
+
         this.buttonClasses = 'btn btn-sm';
         this.applyClass = 'btn-success';
         this.cancelClass = 'btn-default';
@@ -992,6 +994,14 @@
                 parentRightEdge = this.parentEl[0].clientWidth + this.parentEl.offset().left;
             }
 
+            // "intelligent" open mode (based on input element position)
+            if (this.intelligentOpen) {
+              var offset = this.element.offset();
+              this.opens = offset.left < parentRightEdge / 2 ? 'right' : 'left'
+              this.drops = (offset.top + this.element.height()) < $(window).height() / 2 ? 'down' : 'up';
+              this.container.removeClass('opensleft opensright').addClass('opens' + this.opens);
+            }
+
             if (this.drops == 'up')
                 containerTop = this.element.offset().top - this.container.outerHeight() - parentOffset.top;
             else
@@ -1197,6 +1207,10 @@
             // hide all content, show associated one
             this.container.find(".tab-content .tab-pane").removeClass("active")
             this.container.find("#" + $(e.target).attr("data-target")).addClass("active")
+            // move back into correct position
+            if (this.drops === "up") {
+              this.move();
+            }
         },
 
         hoverDate: function(e) {
