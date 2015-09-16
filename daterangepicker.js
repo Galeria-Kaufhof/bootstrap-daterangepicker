@@ -585,28 +585,13 @@
             this.container.find('.ranges li').removeClass('active');
             if (this.endDate == null) return;
 
-            var customRange = true;
+            var selectedRange = this.getSelectedRange();
             var i = 0;
             for (var range in this.ranges) {
-                if (this.timePicker) {
-                    if (this.startDate.isSame(this.ranges[range][0]) && this.endDate.isSame(this.ranges[range][1])) {
-                        customRange = false;
-                        this.chosenLabel = this.container.find('.ranges li:eq(' + i + ')').addClass('active').html();
-                        break;
-                    }
-                } else {
-                    //ignore times when comparing dates if time picker is not enabled
-                    if (this.startDate.format('YYYY-MM-DD') == this.ranges[range][0].format('YYYY-MM-DD') && this.endDate.format('YYYY-MM-DD') == this.ranges[range][1].format('YYYY-MM-DD')) {
-                        customRange = false;
-                        this.chosenLabel = this.container.find('.ranges li:eq(' + i + ')').addClass('active').html();
-                        break;
-                    }
-                }
-                i++;
-            }
-            if (customRange) {
-                this.chosenLabel = this.container.find('.ranges li:last').addClass('active').html();
-                this.showCalendars();
+              if (range === selectedRange) {
+                this.chosenLabel = this.container.find('.ranges li:eq(' + i + ')').addClass('active').html();
+              }
+              i++;
             }
 
         },
@@ -1120,6 +1105,18 @@
         hideCalendars: function() {
             this.container.removeClass('show-calendar');
             this.element.trigger('hideCalendar.daterangepicker', this);
+        },*/
+
+        getSelectedRange: function () {
+          for (var range in this.ranges) {
+            if (
+              (this.timePicker && this.startDate.isSame(this.ranges[range][0]) && this.endDate.isSame(this.ranges[range][1]))
+              || (!this.timePicker && this.startDate.format('YYYY-MM-DD') === this.ranges[range][0].format('YYYY-MM-DD') && this.endDate.format('YYYY-MM-DD') === this.ranges[range][1].format('YYYY-MM-DD'))
+            ) {
+              return range;
+            }
+          }
+          return null;
         },
 
         hoverRange: function(e) {
