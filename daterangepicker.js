@@ -439,6 +439,8 @@
             this.element.trigger('change');
         }
 
+        // trigger init event so the user can add post-initialization code
+        this.element.trigger('init.daterangepicker', [this]);
     };
 
     DateRangePicker.prototype = {
